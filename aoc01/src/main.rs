@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, io};
 use std::fs::File;
 use std::io::{prelude::*, BufReader};
 
@@ -17,11 +17,9 @@ use std::error::Error;
 /// To find it, individually calculate the fuel needed for the mass of each module (your puzzle input),
 /// then add together all the fuel values.
 fn main() -> std::result::Result<(), Box<dyn Error>> {
-    let args: Vec<String> = env::args().collect();
-    let file_path: &str = &args[1];
-    let file = File::open(file_path)?;
+
+    let file = read_file().unwrap();
     let reader = BufReader::new(file);
-    println!("Reading file: {}", file_path);
     // closure to calculate fuel
     let fuel = |mass| ((((mass / 3) as f32).floor() as i32) - 2);
 
@@ -35,4 +33,13 @@ fn main() -> std::result::Result<(), Box<dyn Error>> {
 
     println!("Total fuel needed: {}", total_fuel);
     Ok(())
+}
+
+fn read_file() -> Result<File, io::Error> {
+
+    let args: Vec<String> = env::args().collect();
+    let file_path: &str = &args[1];
+    println!("Reading file: {}", file_path);
+    let file = File::open(file_path)?;
+    Ok(file)
 }
